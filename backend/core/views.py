@@ -16,3 +16,20 @@ def about(request):
         "Administrator",
     ]
     return render(request, "core/about.html", {"project_roles": project_roles})
+
+def contact(request):
+    context = {
+        "department_name": "Department of Software Engineering",
+        "email": "servicedesk@veritas.edu.ng",
+        "office_hours": "Monday - Friday: 8:00 AM - 4:00 PM",
+    }
+    return render(request, "core/contact.html", context)
+
+def workflow(request):
+    stages = [
+        "Request submitted",
+        "Request triaged",
+        "Technician assigned",
+        "Request resolved",
+    ]
+    return render(request, "core/workflow.html", {"stages": stages})
