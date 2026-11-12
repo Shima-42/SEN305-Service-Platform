@@ -1,0 +1,11 @@
+{% extends "core/base.html" %}
+{% block title %}Page Not Found | VUA ServiceDesk{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <p class="eyebrow">Error 404</p>
+    <h1>Page Not Found</h1>
+    <p>The page you requested does not exist or has been moved.</p>
+    <a class="button" href="{% url 'core:home' %}">Return to Home</a>
+</section>
+{% endblock %}
