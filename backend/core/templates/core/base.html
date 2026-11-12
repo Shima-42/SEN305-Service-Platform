@@ -14,11 +14,26 @@
  <nav aria-label="Primary navigation">
  <a href="{% url 'core:home' %}">Home</a>
  <a href="{% url 'core:about' %}">About</a>
+ {% if user.is_authenticated %}
+  <a href="{% url 'requests:list' %}">Requests</a>
+  <form method="post" action="{% url 'logout' %}" class="nav-form">
+    {% csrf_token %}<button type="submit">Sign out</button>
+  </form>
+{% else %}
+  <a href="{% url 'login' %}">Sign in</a>
+{% endif %}
  </nav>
  </div>
  </header>
  <main class="container">
- {% block content %}{% endblock %}
+    {% if messages %}
+    <div class="messages" aria-live="polite">
+      {% for message in messages %}
+        <p class="message {{ message.tags }}">{{ message }}</p>
+      {% endfor %}
+    </div>
+  {% endif %}
+  {% block content %}{% endblock %}
  </main>
  <footer class="site-footer">
  <div class="container">VUA-SEN305 practical project</div>
