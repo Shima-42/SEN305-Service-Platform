@@ -86,6 +86,7 @@ def service_request_resolve(*, item, actor, work_notes):
     work_order.save(update_fields=["work_notes", "completed_at"])
     locked.status = ServiceRequest.Status.RESOLVED
     locked.resolved_at = now
+    locked.resolution_summary = work_notes.strip()
     locked.full_clean()
-    locked.save(update_fields=["status", "resolved_at", "updated_at"])
+    locked.save(update_fields=["status", "resolved_at", "resolution_summary", "updated_at"])
     return locked

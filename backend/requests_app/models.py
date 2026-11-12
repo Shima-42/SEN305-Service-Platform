@@ -1,5 +1,6 @@
 import uuid
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.db import models
 
 
@@ -47,9 +48,31 @@ class ServiceRequest(models.Model):
         choices=Status.choices,
         default=Status.OPEN,
     )
+    due_at = models.DateTimeField(null=True, blank=True)
     resolved_at = models.DateTimeField(null=True, blank=True)
+    resolution_summary = models.TextField(blank=True, default="")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["status", "due_at"], name="req_status_due_idx"),
+        ]
+
+    def clean(self):
+        super().clean()
+        if self.status in (self.Status.RESOLVED, self.Status.CLOSED):
+            errors = {}
+            if not self.resolved_at:
+                errors["resolved_at"] = (
+                    "Resolved or closed requests require a resolution timestamp."
+                )
+            if not (self.resolution_summary or "").strip():
+                errors["resolution_summary"] = (
+                    "Resolved or closed requests require a non-empty resolution summary."
+                )
+            if errors:
+                raise ValidationError(errors)
 
     def __str__(self):
         return self.title
